@@ -1,0 +1,28 @@
+
+digraph {
+    label="MPV flow"
+    VM_AUX [label = "Voicemeeter\nAUX Input"]
+    obs_vrcdn [label="OBS\nScene:\nvrcdn"]
+    obs_visuals [label="OBS\nScene:\nVisuals"]
+    
+    vrcdn -> mpv
+    youtube -> mpv
+    spotify -> VM_AUX
+
+    mpv -> VM_AUX
+    mpv->obs_vrcdn[label="window capture"]
+    obs_vrcdn -> Nestdrop [label="spout"]
+    
+    VM_AUX -> obs_visuals [label="audio\noutput\ncapture"]
+    
+    VM_AUX -> Headphones
+    
+    VM_AUX -> Nestdrop
+    Nestdrop -> obs_visuals [label="spout"]
+
+    VM_AUX -> B2
+    B2 -> Pulse [label="input\ndevice"]
+    Pulse -> Nestdrop [label="ableton\nlink"]
+
+    obs_visuals -> stream
+}
