@@ -82,6 +82,7 @@ workflow(
                 failOnUnmatchedFiles = true,
 //                token = expr { github.token },
                 generateReleaseNotes = true,
+                // drafts and prereleases cannot use makeLatest
 //                makeLatest = ActionGhRelease.MakeLatest.True,
             )
         )
