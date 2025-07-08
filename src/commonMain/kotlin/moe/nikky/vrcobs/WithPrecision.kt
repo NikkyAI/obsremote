@@ -1,11 +1,12 @@
 package moe.nikky.vrcobs
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.math.roundToInt
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 val Duration.withPrecisionSeconds get() = toComponents { seconds, nano ->
     ((nano / 1_000_000_000f).roundToInt() + seconds).seconds
@@ -21,5 +22,7 @@ val Duration.withPrecisionHours get() = toComponents { hours, minutes, seconds, 
     hours.hours
 }
 
+@OptIn(ExperimentalTime::class)
 val Instant.withPrecisionMilliseconds get() = Instant.fromEpochMilliseconds(toEpochMilliseconds())
+@OptIn(ExperimentalTime::class)
 val Instant.withPrecisionSeconds get() = Instant.fromEpochSeconds(toEpochMilliseconds() / 1000)

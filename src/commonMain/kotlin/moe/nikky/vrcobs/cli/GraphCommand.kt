@@ -8,17 +8,18 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import moe.nikky.vrcobs.graph.BitrateFrame
 import moe.nikky.vrcobs.graph.GraphWidget
 import kotlin.math.sin
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.ExperimentalTime
 
 object GraphCommand: BaseCommand(
     "testgraph"
 ) {
-    @OptIn(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
     override suspend fun run() = coroutineScope {
 //        val fs = FILESYSTEM
 

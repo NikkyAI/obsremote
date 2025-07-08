@@ -34,7 +34,7 @@ kotlin {
 //            }
 //        }
         compilerOptions {
-
+//            optIn.add("kotlin.time.ExperimentalTime")
         }
 //        withJava()
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -43,11 +43,14 @@ kotlin {
         }
     }
     mingwX64 {
+        compilerOptions {
+//            optIn.add("kotlin.time.ExperimentalTime")
+        }
         binaries {
             executable() {
                 this.baseName = "obsremote"
                 this.entryPoint = "main"
-                runTask?.also { runTask ->
+                runTaskProvider?.orNull?.also { runTask ->
                     val args = providers.gradleProperty("runArgs")
                     runTask.argumentProviders.add {
                         args.orNull?.let { listOf(it) }/*?.split(' ')*/ ?: emptyList()
@@ -78,6 +81,8 @@ kotlin {
             implementation("io.github.rejeq:ktobs-ktor:_")
 
             implementation("com.squareup.okio:okio:_")
+//            implementation("com.saveourtool:okio-extras:_")
+            implementation("com.saveourtool.okio-extras:okio-extras:_")
 
             implementation("io.github.oshai:kotlin-logging:_")
 
@@ -154,12 +159,17 @@ tasks.shadowJar {
 
 tasks {
     val linkDebugExecutableMingwX64 by getting {}
+    val linkReleaseExecutableMingwX64 by getting {}
+    val shadowJar by getting {}
 
     val packageDistributable by registering(Zip::class) {
         group = "package"
         from(linkDebugExecutableMingwX64)
-        from(project.file("README.md"))
+        from(shadowJar)
+//        from(project.file("README.md"))
         archiveBaseName.set(project.name)
+        archiveVersion.set("")
+        archiveClassifier.set("")
         destinationDirectory.set(project.file("build"))
     }
     val deployDistributable by registering(Copy::class) {

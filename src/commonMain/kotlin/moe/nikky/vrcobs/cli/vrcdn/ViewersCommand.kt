@@ -1,4 +1,4 @@
-package moe.nikky.vrcobs.cli
+package moe.nikky.vrcobs.cli.vrcdn
 
 import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -11,15 +11,17 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.delay
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
+import moe.nikky.vrcobs.cli.BaseCommand
 import moe.nikky.vrcobs.graph.ViewersResponse
 import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalEncodingApi::class)
 object ViewersCommand : BaseCommand(
@@ -40,6 +42,7 @@ object ViewersCommand : BaseCommand(
         second()
     }
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun run() {
         val terminal = Terminal(
             ansiLevel = AnsiLevel.TRUECOLOR
@@ -91,10 +94,10 @@ object ViewersCommand : BaseCommand(
                 val response = httpClient.get("http://api.vrcdn.live/v1/viewers/$streamName")
                     .body<ViewersResponse>()
                 responseQueue.addFirst(Clock.System.now() to response)
-                if(responseQueue.size > 5) {
+                if(responseQueue.size > 100) {
                     responseQueue.removeLast()
                 }
-                animation.update(responseQueue.takeLast(5))
+                animation.update(responseQueue.takeLast(10))
             } catch (e: Exception) {
                 logger.error(e) { "failed to get viewers" }
             }

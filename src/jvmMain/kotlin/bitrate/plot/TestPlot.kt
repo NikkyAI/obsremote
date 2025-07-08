@@ -7,7 +7,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import moe.nikky.vrcobs.cli.GraphCommand
 import java.io.File
 import kotlin.math.cos

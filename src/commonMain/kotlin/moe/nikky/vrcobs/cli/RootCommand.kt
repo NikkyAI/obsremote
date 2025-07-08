@@ -5,6 +5,7 @@ import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.subcommands
 import moe.nikky.vrcobs.cli.bitrate.BitrateGroup
 import moe.nikky.vrcobs.cli.input.InputGroup
+import moe.nikky.vrcobs.cli.vrcdn.ViewersCommand
 
 class RootCommand : BaseCommand(
     "obsremote"
@@ -24,7 +25,7 @@ class RootCommand : BaseCommand(
             BitrateGroup,
             GraphCommand,
             ViewersCommand,
-            ConfigCommand
+//            ConfigCommand
         )
     }
 

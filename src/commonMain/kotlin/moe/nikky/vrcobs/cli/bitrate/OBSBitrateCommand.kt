@@ -15,8 +15,9 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.rejeq.ktobs.request.stream.getStreamStatus
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.delay
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import moe.nikky.vrcobs.OBSConnectionOptionGroup
 import moe.nikky.vrcobs.graph.BitrateFrame
@@ -26,6 +27,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.math.roundToLong
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalEncodingApi::class)
 object OBSBitrateCommand : SuspendingCliktCommand(
@@ -45,6 +47,7 @@ object OBSBitrateCommand : SuspendingCliktCommand(
 
     private val logger = KotlinLogging.logger {}
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun run() {
         val lines = 20
         val terminal = Terminal(
@@ -116,7 +119,7 @@ object OBSBitrateCommand : SuspendingCliktCommand(
         char('-')
         monthNumber()
         char('-')
-        dayOfMonth()
+        day(padding = Padding.ZERO)
         char(' ')
         hour();
         char(':')

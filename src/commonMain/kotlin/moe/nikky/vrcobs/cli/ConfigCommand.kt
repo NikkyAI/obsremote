@@ -11,7 +11,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import moe.nikky.vrcobs.graph.BitrateFrame
 import moe.nikky.vrcobs.graph.GraphWidget
@@ -34,6 +34,11 @@ object ConfigCommand: BaseCommand(
         val dotenvFile = homedir / ".config/obsremote/.env".toPath(normalize = true)
         println("opening $dotenvFile")
         //TODO: check if we are on unix and use xdg-open
-        exec("explorer.exe", dotenvFile.toString())
-    }
+        try {
+            exec("explorer.exe", dotenvFile.toString())
+        }catch (e: IllegalStateException){
+            e.printStackTrace()
+            println("failed to open file")
+        }
+        }
 }
