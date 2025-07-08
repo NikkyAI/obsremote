@@ -73,17 +73,17 @@ workflow(
             action = ActionGhRelease(
                 body = "Nightly Build",
                 draft = false,
-                prerelease = true,
+                prerelease = false,
                 files = listOf(
                     "build/obsremote.zip"
                 ),
-                name = "Nightly",
+                name = "Latest Build",
                 tagName = "nightly",
                 failOnUnmatchedFiles = true,
 //                token = expr { github.token },
                 generateReleaseNotes = true,
                 // drafts and prereleases cannot use makeLatest
-//                makeLatest = ActionGhRelease.MakeLatest.True,
+                makeLatest = ActionGhRelease.MakeLatest.True,
             )
         )
     }

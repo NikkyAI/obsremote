@@ -53,10 +53,11 @@ jobs:
       uses: 'softprops/action-gh-release@v2.0.6'
       with:
         body: 'Nightly Build'
-        name: 'Nightly'
+        name: 'Latest Build'
         tag_name: 'nightly'
         draft: 'false'
-        prerelease: 'true'
+        prerelease: 'false'
         files: 'build/obsremote.zip'
         fail_on_unmatched_files: 'true'
         generate_release_notes: 'true'
+        make_latest: 'true'
