@@ -3,7 +3,7 @@ package moe.nikky.vrcobs.graph
 import kotlinx.serialization.Serializable
 
 @Serializable
-class ViewersResponse(
+data class ViewersResponse(
     val viewers: List<Region>
 ) {
     @Serializable

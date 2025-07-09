@@ -93,11 +93,26 @@ object ViewersCommand : BaseCommand(
             try {
                 val response = httpClient.get("http://api.vrcdn.live/v1/viewers/$streamName")
                     .body<ViewersResponse>()
+//                while(responseQueue.firstOrNull()?.second == response) {
+//                    responseQueue.removeFirst()
+//                }
                 responseQueue.addFirst(Clock.System.now() to response)
-                if(responseQueue.size > 100) {
+                if (responseQueue.size > 100) {
                     responseQueue.removeLast()
                 }
-                animation.update(responseQueue.takeLast(10))
+                val filtered = responseQueue
+                    .asSequence()
+                    .fold(
+                        initial = listOf<Pair<Instant, ViewersResponse>>()
+                    ) { acc, nextEntry ->
+                        val (timestamp, viewers) = nextEntry
+                        if(acc.lastOrNull()?.second?.hashCode() == viewers.hashCode()) {
+                            acc
+                        } else {
+                            acc + nextEntry
+                        }
+                    }
+                animation.update(filtered.take(10).toList())
             } catch (e: Exception) {
                 logger.error(e) { "failed to get viewers" }
             }
