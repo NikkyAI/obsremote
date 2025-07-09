@@ -112,7 +112,7 @@ object ViewersCommand : BaseCommand(
                             acc + nextEntry
                         }
                     }
-                animation.update(filtered.take(10).toList())
+                animation.update(filtered.take(10).toList().reversed())
             } catch (e: Exception) {
                 logger.error(e) { "failed to get viewers" }
             }
