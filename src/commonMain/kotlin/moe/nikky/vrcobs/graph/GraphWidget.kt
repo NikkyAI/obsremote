@@ -44,7 +44,7 @@ class GraphWidget(
 
         val unitsPerChar = (highEdge - lowEdge) / (lines * linesMultiplier)
 
-//        fun bitrateToLineheight(bitrate: Long): Int = (bitrate / unitsPerChar).toInt()
+        //        fun bitrateToLineheight(bitrate: Long): Int = (bitrate / unitsPerChar).toInt()
         fun BitrateFrame.toLineHeight() = (bitrate / unitsPerChar).toInt()
 
 //        val lineHeights = frames.takeLast((width - 10) * 2).mapIndexed { i, frame ->
@@ -56,12 +56,14 @@ class GraphWidget(
 //        val currentValue = frames.last().bitrate
         val warnHeight = warningLine / unitsPerChar
 
-        fun colorForHeightWithWarning(lineHeight: Int) = if(lineHeight / linesMultiplier < warnHeight / linesMultiplier) {
-            TextColors.hsv(((lines - lineHeight / linesMultiplier) * -12) % 360, 1, 1) + TextColors.black.bg
-        } else {
-            TextColors.black + TextColors.hsv(((lines - lineHeight / linesMultiplier) * -12) % 360, 1, 1).bg
-        }
-        fun colorForHeight(lineHeight: Int) =  TextColors.hsv(((lines - lineHeight) * -12) % 360, 1, 1)
+        fun colorForHeightWithWarning(lineHeight: Int) =
+            if (lineHeight / linesMultiplier < warnHeight / linesMultiplier) {
+                TextColors.hsv(((lines - lineHeight / linesMultiplier) * -12) % 360, 1, 1) + TextColors.black.bg
+            } else {
+                TextColors.black + TextColors.hsv(((lines - lineHeight / linesMultiplier) * -12) % 360, 1, 1).bg
+            }
+
+        fun colorForHeight(lineHeight: Int) = TextColors.hsv(((lines - lineHeight) * -12) % 360, 1, 1)
 
 
         val frames = frames.takeLast(240)
@@ -161,8 +163,6 @@ class GraphWidget(
 //                    value < warningLine ->  if(frameIndex%2 == 0) TextColors.white else TextColors.brightWhite
                                 else -> {
                                     error("")
-//                        TextStyle()
-//                        if (frameIndex % 2 == 0) TextColors.white else TextColors.gray
                                 }
                             }
 
@@ -174,8 +174,8 @@ class GraphWidget(
                                         row2 -> "⠑"
                                         row3 -> "⠱"
                                         row4 -> "⢱"
-                                        null, in 0..row1, in (row4 + 1)..Int.MAX_VALUE -> "⠁"
-                                        else -> error("")
+//                                        null, in 0..row1, in (row4 + 1)..Int.MAX_VALUE -> "⠁"
+                                        else -> "⠁"
                                     }
 
                                     row2 -> when (rightHeight) {
@@ -183,8 +183,8 @@ class GraphWidget(
                                         row2 -> "⠒"
                                         row3 -> "⠢"
                                         row4 -> "⢢"
-                                        null, in 0..<row1, in (row4 + 1)..Int.MAX_VALUE -> "⠂"
-                                        else -> error("")
+//                                        null, in 0..<row1, in (row4 + 1)..Int.MAX_VALUE -> "⠂"
+                                        else -> "⠂"
                                     }
 
                                     row3 -> when (rightHeight) {
@@ -192,8 +192,8 @@ class GraphWidget(
                                         row2 -> "⠔"
                                         row3 -> "⠤"
                                         row4 -> "⢄"
-                                        null, in 0..<row1, in (row4 + 1)..Int.MAX_VALUE -> "⠄"
-                                        else -> error("")
+//                                        null, in 0..<row1, in (row4 + 1)..Int.MAX_VALUE -> "⠄"
+                                        else -> "⠄"
                                     }
 
                                     row4 -> when (rightHeight) {
@@ -201,20 +201,28 @@ class GraphWidget(
                                         row2 -> "⡔"
                                         row3 -> "⡠"
                                         row4 -> "⣀"
-                                        null, in 0..<row1, in (row4 + 1)..Int.MAX_VALUE -> "⡀"
-                                        else -> error("")
+//                                        null, in 0..<row1, in (row4 + 1)..Int.MAX_VALUE -> "⡀"
+                                        else -> "⡀"
                                     }
 
-                                    null, in 0..<row1, in row4..Int.MAX_VALUE -> when (rightHeight) {
+//                                    null, in 0..<row1, in (row4 + 1)..Int.MAX_VALUE -> when (rightHeight) {
+//                                        row1 -> "⠈"
+//                                        row2 -> "⠐"
+//                                        row3 -> "⠠"
+//                                        row4 -> "⢀"
+//                                        null, in 0..<row1, in (row4 + 1)..Int.MAX_VALUE -> " "
+//                                        else -> " "
+//                                    }
+                                    else -> when (rightHeight) {
                                         row1 -> "⠈"
                                         row2 -> "⠐"
                                         row3 -> "⠠"
                                         row4 -> "⢀"
-                                        null, in 0..<row1, in (row4 + 1)..Int.MAX_VALUE -> " "
-                                        else -> error("")
+//                                        null, in 0..<row1, in (row4 + 1)..Int.MAX_VALUE -> " "
+                                        else -> " "
                                     }
 
-                                    else -> error("")
+//                                    else -> error("")
                                 }
                                 if (glyph == " ") {
                                     Span.space(1, style)

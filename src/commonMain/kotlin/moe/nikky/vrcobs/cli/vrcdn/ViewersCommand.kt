@@ -69,7 +69,7 @@ object ViewersCommand : BaseCommand(
                 }
                 body {
                     row {
-                        cell("Global")
+                        cell("Total")
                         viewersByRegion.forEach {
                             cell(it.second.values.sum())
                         }
