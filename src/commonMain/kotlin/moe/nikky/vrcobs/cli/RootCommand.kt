@@ -25,7 +25,7 @@ class RootCommand : BaseCommand(
             BitrateGroup,
             GraphCommand,
             ViewersCommand,
-//            ConfigCommand
+            ConfigCommand
         )
     }
 

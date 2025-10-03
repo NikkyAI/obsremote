@@ -63,7 +63,9 @@ suspend fun obsSession(
         val session = ObsSessionBuilder(client).apply {
             host = connectionProps.host
             port = connectionProps.port
-            password = connectionProps.password
+            if(!connectionProps.password.isNullOrBlank()) {
+                password = connectionProps.password
+            }
 
             eventSubs = ObsEventSubs.General +  ObsEventSubs.MediaInputs
 //            eventSubs = ObsEventSubs.General + ObsEventSubs.Inputs

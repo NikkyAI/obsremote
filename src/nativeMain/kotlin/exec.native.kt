@@ -23,7 +23,7 @@ actual fun exec(
 
     val status = pclose?.invoke(fp)
     if (status != 0) {
-        error("Command `$command` failed with status $status${if (redirectStderr) ": $stdout" else ""}")
+        error("Command `[${command.joinToString()}]` failed with status $status${if (redirectStderr) ": $stdout" else ""}")
     }
 
     return if (trim) stdout.trim() else stdout
