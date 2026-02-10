@@ -13,7 +13,7 @@ fun <T : Any> T?.checkNotNullExt(lazyMessage: (() -> String)? = null): T {
     }
     if (this == null) {
         val message = lazyMessage?.invoke() ?: "Required value was null."
-        throw IllegalStateException(message)
+        throw NullPointerException(message)
     } else {
         return this
     }
@@ -25,7 +25,7 @@ fun <T : Any> checkNotNullDebug(value: T?, message: String = "Required value was
     }
     if (value == null) {
 //        val message = lazyMessage()
-        throw IllegalStateException(message)
+        throw NullPointerException(message)
     } else {
         return value
     }
@@ -37,8 +37,8 @@ fun <T : Any> checkNotNullDebug(value: T?, lazyMessage: (() -> String)): T {
         returns() implies (value != null)
     }
     if (value == null) {
-        val message = lazyMessage?.invoke() ?: "Required value was null."
-        throw IllegalStateException(message)
+        val message = lazyMessage() // ?.invoke() ?: "Required value was null."
+        throw NullPointerException(message)
     } else {
         return value
     }

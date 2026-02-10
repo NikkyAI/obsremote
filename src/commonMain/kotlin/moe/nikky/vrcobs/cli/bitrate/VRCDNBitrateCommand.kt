@@ -1,10 +1,13 @@
 package moe.nikky.vrcobs.cli.bitrate
 
 import com.github.ajalt.clikt.core.Context
+import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.arguments.help
 import com.github.ajalt.clikt.parameters.groups.provideDelegate
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.mordant.animation.animation
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.terminal.Terminal
@@ -40,13 +43,14 @@ object VRCDNBitrateCommand : BaseCommand(
     override fun help(context: Context): String =
         "displays VRCDN bitrate graph via wss://ws.vrcdn.live/bitrate"
 
-    val streamKey by option("--key")
+    val streamKey by argument("key")
+//        .required()
         .help("optional: will use current streamkey from OBS by default")
-    val ignoreStreamStatus by option("--ignore-obs-status", "-f")
-        .flag(default = false)
-        .help("will warn and stop if you are not currently streaming")
+//    val ignoreStreamStatus by option("--ignore-obs-status", "-f")
+//        .flag(default = false)
+//        .help("will warn and stop if you are not currently streaming")
 
-    val obsConnectionGroup by OBSConnectionOptionGroup()
+//    val obsConnectionGroup by OBSConnectionOptionGroup()
     private val logger = KotlinLogging.logger {}
 
     override suspend fun run() {
@@ -79,37 +83,37 @@ object VRCDNBitrateCommand : BaseCommand(
         val httpClient = getHttpClient()
 
         var key: String? = streamKey
-        if (key == null) {
-            try {
-                obsSession(obsConnectionGroup.properties) {
-//                    println(getStreamServiceSettings().settings)
-                    if (!getStreamStatus().active) {
-                        logger.warn { "WARN: you are not currently streaming" }
-                        if (!ignoreStreamStatus) {
-                            println("please make sure your obs is streaming")
-                            throw IllegalStateException("OBS is not streaming")
-                        }
-                    }
-                    val server = getStreamServiceSettings().settings.jsonObject["server"]?.jsonPrimitive?.content
-                    if (server != "rtmp://ingest.vrcdn.live/live" && server != "rtmp://ingest.vrcdn.live/guest") {
-                        logger.error { "you are streaming to $server, not a recognized VRCDN live url, consider manually passing in the key to skip this check" }
-                        throw IllegalStateException("OBS is streamign to the wrong provider")
-                    }
-                    key = getStreamServiceSettings().settings.jsonObject["key"]?.jsonPrimitive?.content
-                    key?.let { key ->
-                        val maskedKey = key.mapIndexed { i, c -> if (i <= 5 || c == '-') c else '*' }
-                            .joinToString("")
-                        logger.info { "loaded key from obs: $maskedKey" }
-                    }
-                }
-            } catch (e: Exception) {
-                logger.error { "failed to get stream key from OBS, consider passing it via --key if you are not running OBS" }
-                logger.error { e.message }
-                throw e
-            }
-        } else {
-            logger.info { "using provided key, cancelled obs integration" }
-        }
+//        if (key == null) {
+//            try {
+//                obsSession(obsConnectionGroup.properties) {
+////                    println(getStreamServiceSettings().settings)
+//                    if (!getStreamStatus().active) {
+//                        logger.warn { "WARN: you are not currently streaming" }
+//                        if (!ignoreStreamStatus) {
+//                            println("please make sure your obs is streaming")
+//                            throw IllegalStateException("OBS is not streaming")
+//                        }
+//                    }
+//                    val server = getStreamServiceSettings().settings.jsonObject["server"]?.jsonPrimitive?.content
+//                    if (server != "rtmp://ingest.vrcdn.live/live" && server != "rtmp://ingest.vrcdn.live/guest") {
+//                        logger.error { "you are streaming to $server, not a recognized VRCDN live url, consider manually passing in the key to skip this check" }
+//                        throw IllegalStateException("OBS is streamign to the wrong provider")
+//                    }
+//                    key = getStreamServiceSettings().settings.jsonObject["key"]?.jsonPrimitive?.content
+//                    key?.let { key ->
+//                        val maskedKey = key.mapIndexed { i, c -> if (i <= 5 || c == '-') c else '*' }
+//                            .joinToString("")
+//                        logger.info { "loaded key from obs: $maskedKey" }
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                logger.error { "failed to get stream key from OBS, consider passing it via --key if you are not running OBS" }
+//                logger.error { e.message }
+//                throw e
+//            }
+//        } else {
+//            logger.info { "using provided key, cancelled obs integration" }
+//        }
         if (key == null) {
             key = Terminal().prompt(
                 prompt = "enter your vrcdn streamkey",
@@ -127,6 +131,7 @@ object VRCDNBitrateCommand : BaseCommand(
                         val xorKey = 42 // The meaning of life
                         val xoredString = streamKey.map { (it.code xor xorKey).toChar() }.joinToString("")
                         val newKey = Base64.Default.encode(xoredString.toByteArray())
+                        logger.info { "sending: {\"subscribe\": \"$newKey\"}" }
                         send("""{"subscribe": "$newKey"}""")
                     }
 
