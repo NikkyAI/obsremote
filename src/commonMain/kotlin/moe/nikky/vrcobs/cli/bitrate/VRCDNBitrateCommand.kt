@@ -82,44 +82,7 @@ object VRCDNBitrateCommand : BaseCommand(
 
         val httpClient = getHttpClient()
 
-        var key: String? = streamKey
-//        if (key == null) {
-//            try {
-//                obsSession(obsConnectionGroup.properties) {
-////                    println(getStreamServiceSettings().settings)
-//                    if (!getStreamStatus().active) {
-//                        logger.warn { "WARN: you are not currently streaming" }
-//                        if (!ignoreStreamStatus) {
-//                            println("please make sure your obs is streaming")
-//                            throw IllegalStateException("OBS is not streaming")
-//                        }
-//                    }
-//                    val server = getStreamServiceSettings().settings.jsonObject["server"]?.jsonPrimitive?.content
-//                    if (server != "rtmp://ingest.vrcdn.live/live" && server != "rtmp://ingest.vrcdn.live/guest") {
-//                        logger.error { "you are streaming to $server, not a recognized VRCDN live url, consider manually passing in the key to skip this check" }
-//                        throw IllegalStateException("OBS is streamign to the wrong provider")
-//                    }
-//                    key = getStreamServiceSettings().settings.jsonObject["key"]?.jsonPrimitive?.content
-//                    key?.let { key ->
-//                        val maskedKey = key.mapIndexed { i, c -> if (i <= 5 || c == '-') c else '*' }
-//                            .joinToString("")
-//                        logger.info { "loaded key from obs: $maskedKey" }
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                logger.error { "failed to get stream key from OBS, consider passing it via --key if you are not running OBS" }
-//                logger.error { e.message }
-//                throw e
-//            }
-//        } else {
-//            logger.info { "using provided key, cancelled obs integration" }
-//        }
-        if (key == null) {
-            key = Terminal().prompt(
-                prompt = "enter your vrcdn streamkey",
-                hideInput = true
-            )
-        }
+        var key: String = streamKey
         var connectAttempts = 0
         do {
             connectAttempts++
@@ -127,7 +90,7 @@ object VRCDNBitrateCommand : BaseCommand(
             try {
                 httpClient.webSocket("wss://ws.vrcdn.live/bitrate") {
                     run {
-                        val streamKey = key ?: error("need to provide vrcdn stream key")
+                        val streamKey = key // ?: error("need to provide vrcdn stream key")
                         val xorKey = 42 // The meaning of life
                         val xoredString = streamKey.map { (it.code xor xorKey).toChar() }.joinToString("")
                         val newKey = Base64.Default.encode(xoredString.toByteArray())
